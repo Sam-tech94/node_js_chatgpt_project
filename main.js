@@ -3,7 +3,7 @@ import fs from "fs";
 
 const configuration = new Configuration({
   organization: "org-Gf8whMorZe2ki2KK6xgEVNKj",
-  apiKey: "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"
+  apiKey: "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"
 });
 
 const openai = new OpenAIApi(configuration);

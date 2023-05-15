@@ -1,41 +1,18 @@
-import { Configuration,  OpenAIApi} from "openai";
-import fs from "fs";
+const { Configuration, OpenAIApi } = require("openai");
+require("dotenv").config();
 
-const configuration = new Configuration({
-  organization: "org-Gf8whMorZe2ki2KK6xgEVNKj",
-  apiKey: "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"
-});
-
-const openai = new OpenAIApi(configuration);
-
-const sampleText = 'This is some sample text to be written to the input.txt file.';
-
-fs.writeFile('input.txt', sampleText, (err) => {
-  if (err) throw err;
-  console.log('Input file created!');
-
-  const inputText = fs.readFileSync('input.txt', 'utf-8');
-
-  console.log("input text", inputText)
-
-  openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages: [{role: "user", content: inputText}],
-  })
-  .then(response => {
-    const answer = response.data.choices[0]?.text?.trim();
-    if (answer) {
-      // console.log(answer);
-      fs.writeFile("output.txt", answer, (err) => {
-        if (err) throw err;
-        console.log("Output saved to output.txt");
-      });
-    } else {
-      console.log("Error: Empty response from OpenAI API");
-    }
-  })
-  .catch(error => {
-    console.log(error)
+async function runChatCompletion() {
+  const configuration = new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
   });
-});
+  const openai = new OpenAIApi(configuration);
+  const completion = await openai.createChatCompletion({
+    model: "gpt-3.5-turbo",
+    messages: [{ role: "user", content: "Hello world" }],
+  });
+  console.log(completion.data.choices[0].message);
+}
+
+runChatCompletion().catch((err) => console.error(err));
+
 
